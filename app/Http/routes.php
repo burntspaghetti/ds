@@ -47,10 +47,9 @@ Route::get('/test2', function()
 
 //    $username = 'burntspaghetti';
     $username = 'taylorotwell';
-    $searchURL = "https://api.github.com/users/". $username . "/followers";
-    $followers = json_decode(curl($searchURL));
-
-    dd($response);
+//    $searchURL = "https://api.github.com/users/". $username . "/followers";
+    $searchURL = "https://api.github.com/users/rate_limit";
+    $response = json_decode(curl($searchURL));
 
     return $response;
 });
