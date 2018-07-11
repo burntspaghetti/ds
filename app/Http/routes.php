@@ -18,4 +18,3 @@ Route::get('/', function () {
 
 Route::get('search', 'GithubController@search');
 Route::get('loadMore', 'GithubController@loadMore');
-

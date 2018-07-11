@@ -9,31 +9,33 @@
     </head>
     <body>
         <div class="container">
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3>Find Followers for Github Username </h3>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Find Followers for Github Username</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="search" name="search">
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="search" name="search"></input>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="user_info">
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="user_info" class="row">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div id="thumbnails">
 
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-md-12">
-                    <div id="thumbnails">
+                            </div>
+                            <br><br>
+                            <script type="text/javascript">
 
+                            </script>
+                            <button id="#load_more" onclick="loadMore()" style="display:none" class="btn btn-sm btn-success">Load More...</button>
+                        </div>
                     </div>
-                    <br><br>
-                    <script type="text/javascript">
-
-                    </script>
-                    <button id="#load_more" onclick="loadMore()" style="display:none" class="btn btn-sm btn-success">Load More...</button>
                 </div>
             </div>
         </div>
@@ -52,6 +54,10 @@
                             $('#user_info').html(data.user_info);
                             //decide whether or not to show "load more" button
                             toggleLoadMoreButton(data.next_page);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            console.log(errorThrown);
+                            alert("No results were found for your search.");
                         }
                     });
                 }

@@ -22,7 +22,7 @@ class GithubController extends Controller
             $getFollowerCountURL = "https://api.github.com/users/". $username . "?access_token=" . env('GITHUB_TOKEN');
             $followerCountResponse = json_decode($this->curl($getFollowerCountURL));
             $followerCount = $followerCountResponse->followers;
-            $userInfoArray = ['user_info' => '<p>' . $username . " - ". $followerCount . " followers" . '</p>'];
+            $userInfoArray = ['user_info' => '<p>' . $username . " - ". $followerCount . " followers:" . '</p>'];
 
             //2. get followers
             $followers = $this->getFollowers($username, 1);
@@ -33,10 +33,9 @@ class GithubController extends Controller
             $output="";
             if($followers)
             {
-                foreach ($followers as $follower) {
-
+                foreach ($followers as $follower) 
+                {
                     $output.= '<img alt="thumbnail" height="42" width="42" src="'.$follower->avatar_url.'">';
-
                 }
                 
                 $rows = ['row_data' => $output];
@@ -62,10 +61,9 @@ class GithubController extends Controller
             $output="";
             if($followers)
             {
-                foreach ($followers as $follower) {
-
+                foreach ($followers as $follower) 
+                {
                     $output.= '<img alt="thumbnail" height="42" width="42" src="'.$follower->avatar_url.'">';
-
                 }
 
                 $rows = ['row_data' => $output];
