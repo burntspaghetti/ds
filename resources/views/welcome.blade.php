@@ -18,34 +18,59 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="search" name="search"></input>
                         </div>
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>Followers</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
                     </div>
+                </div>
+            </div>
+            <div id="user_info" class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div id="thumbnails">
+
+                    </div>
+                    <br><br>
+                    <script type="text/javascript">
+
+                    </script>
+                    <button id="#load_more" onclick="loadMore()" class="btn btn-sm btn-success">Load More...</button>
                 </div>
             </div>
         </div>
 
         <script type="text/javascript">
-            $('#search').on('keyup',function(){
+            $('#search').on('keyup',function(e){
+                if(e.keyCode == 13) {//if they press enter, fire off the ajax
+                    $value=$(this).val();
 
-                $value=$(this).val();
+                    $.ajax({
+                        type : 'get',
+                        url : '{{URL::to('search')}}',
+                        data:{'search':$value},
+                        success:function(data){
+                            $('#thumbnails').html(data.row_data);
+                            $('#user_info').html(data.user_info);
+                            //decide whether or not to show "load more" button
+                        }
+                    });
+                }
+            });
+
+            var pageCounter = 1;
+            function loadMore() {
+                pageCounter++;
 
                 $.ajax({
                     type : 'get',
-                    url : '{{URL::to('search')}}',
-                    data:{'search':$value},
+                    url : '{{URL::to('loadMore')}}',
+                    data:{'page_counter':pageCounter},
                     success:function(data){
-                        $('tbody').html(data);
+                        $('#thumbnails').html(data);//do an append?
+                        //decide whether or not to show "load more" button
                     }
                 });
-            })
+            }
+
 
         </script>
         <script type="text/javascript">
