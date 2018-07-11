@@ -51,6 +51,16 @@
                             $('#thumbnails').html(data.row_data);
                             $('#user_info').html(data.user_info);
                             //decide whether or not to show "load more" button
+                            if(data.next_page == 1)
+                            {
+                                //show "load more" button
+                                document.getElementById("#load_more").style.display="block";
+                            }
+                            else if(data.next_page == 0)
+                            {
+                                //hide "load more" button
+                                document.getElementById("#load_more").style.display="none";
+                            }
                         }
                     });
                 }
@@ -67,10 +77,19 @@
                     success:function(data){
                         $('#thumbnails').html(data);//do an append?
                         //decide whether or not to show "load more" button
+                        if(data.next_page == 1)
+                        {
+                            //show "load more" button
+                            document.getElementById("#load_more").style.display="block";
+                        }
+                        else if(data.next_page == 0)
+                        {
+                            //hide "load more" button
+                            document.getElementById("#load_more").style.display="none";
+                        }
                     }
                 });
             }
-
 
         </script>
         <script type="text/javascript">

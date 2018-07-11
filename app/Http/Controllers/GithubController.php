@@ -32,30 +32,37 @@ class GithubController extends Controller
                 curl_setopt($curl, CURLOPT_ENCODING , "gzip");
                 curl_setopt($curl, CURLINFO_HEADER_OUT, true);
                 $result = curl_exec($curl);
-//                $info = curl_getinfo($curl);
                 $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);//get status code
                 curl_close($curl);
-//                dd($httpcode);//200 is good
-                //dd($info);
-                
                 return $result;
             }
-    
-        //    $username = 'burntspaghetti';
+            
             $username = $request->search;
             Session::put('username', $username);
 
             //1. get follower count:
-            $getFollowerCountURL = "https://api.github.com/users/". $username;
+            $getFollowerCountURL = "https://api.github.com/users/". $username . "?access_token=" . env('GITHUB_TOKEN');
             $followerCountResponse = json_decode(curl($getFollowerCountURL));
             $followerCount = $followerCountResponse->followers;
-
-            //2. get followers
-            $searchURL = "https://api.github.com/users/". $username . "/followers?per_page=100";
-            $followers = json_decode(curl($searchURL));
             $userInfoArray = ['user_info' => '<p>' . $username . " - ". $followerCount . " followers" . '</p>'];
 
-            //3. go ahead and see if theres another page with results, in order to populate button in view
+            //2. get followers
+            $searchURL = "https://api.github.com/users/". $username . "/followers?per_page=100&access_token=" . env('GITHUB_TOKEN');
+            $followers = json_decode(curl($searchURL));
+
+            //3. go ahead and see if theres another page with results, in order to populate "load more" button in view
+            $searchURL2 = "https://api.github.com/users/". $username . "/followers?per_page=100&page=2&access_token=" . env('GITHUB_TOKEN');
+            $followers2 = json_decode(curl($searchURL2));
+            if(empty($followers2))
+            {
+                $nextPage = 0;
+            }
+            else
+            {
+                $nextPage = 1;
+            }
+
+            $nextPageArray = ['next_page' => $nextPage];
 
 
             $output="";
@@ -69,7 +76,7 @@ class GithubController extends Controller
                 
                 $rows = ['row_data' => $output];
 
-                return Response(array_merge($userInfoArray, $rows));
+                return Response(array_merge($userInfoArray, $rows, $nextPageArray));
             }
         }
     }
@@ -106,11 +113,21 @@ class GithubController extends Controller
 
 
             //2. get followers
-            $searchURL = "https://api.github.com/users/". $username . "/followers?per_page=100&page=" . $request->page_counter;
+            $searchURL = "https://api.github.com/users/". $username . "/followers?per_page=100&page=" . $request->page_counter . "&access_token=" . env('GITHUB_TOKEN');
             $followers = json_decode(curl($searchURL));
 
             //3. go ahead and see if theres another page with results, in order to populate button in view
-
+            $nextPage = $request->page_counter++;
+            $searchURL2 = "https://api.github.com/users/". $username . "/followers?per_page=100&page=".$nextPage. "&access_token=" . env('GITHUB_TOKEN');
+            $followers2 = json_decode(curl($searchURL2));
+            if(empty($followers2))
+            {
+                $nextPage = 0;
+            }
+            else
+            {
+                $nextPage = 1;
+            }
 
             $output="";
             if($followers)
