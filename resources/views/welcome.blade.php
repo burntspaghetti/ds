@@ -33,7 +33,7 @@
                     <script type="text/javascript">
 
                     </script>
-                    <button id="#load_more" onclick="loadMore()" class="btn btn-sm btn-success">Load More...</button>
+                    <button id="#load_more" onclick="loadMore()" style="display:none" class="btn btn-sm btn-success">Load More...</button>
                 </div>
             </div>
         </div>
@@ -51,16 +51,7 @@
                             $('#thumbnails').html(data.row_data);
                             $('#user_info').html(data.user_info);
                             //decide whether or not to show "load more" button
-                            if(data.next_page == 1)
-                            {
-                                //show "load more" button
-                                document.getElementById("#load_more").style.display="block";
-                            }
-                            else if(data.next_page == 0)
-                            {
-                                //hide "load more" button
-                                document.getElementById("#load_more").style.display="none";
-                            }
+                            toggleLoadMoreButton(data.next_page);
                         }
                     });
                 }
@@ -75,20 +66,25 @@
                     url : '{{URL::to('loadMore')}}',
                     data:{'page_counter':pageCounter},
                     success:function(data){
-                        $('#thumbnails').html(data);//do an append?
+                        $('#thumbnails').html(data.row_data);//do an append?
                         //decide whether or not to show "load more" button
-                        if(data.next_page == 1)
-                        {
-                            //show "load more" button
-                            document.getElementById("#load_more").style.display="block";
-                        }
-                        else if(data.next_page == 0)
-                        {
-                            //hide "load more" button
-                            document.getElementById("#load_more").style.display="none";
-                        }
+                        toggleLoadMoreButton(data.next_page);
                     }
                 });
+            }
+
+            function toggleLoadMoreButton(next_page)
+            {
+                if(next_page == 1)
+                {
+                    //show "load more" button
+                    document.getElementById("#load_more").style.display="block";
+                }
+                else if(next_page == 0)
+                {
+                    //hide "load more" button
+                    document.getElementById("#load_more").style.display="none";
+                }
             }
 
         </script>
